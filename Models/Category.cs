@@ -2,7 +2,7 @@
 
 namespace Bookstore.Models
 {
-    public class Cateogry
+    public class Category
     {
         [Key]
         public int Id { get; set; }
