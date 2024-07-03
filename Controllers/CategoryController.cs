@@ -16,5 +16,10 @@ namespace Bookstore.Controllers
             List<Category> objCategoryList = _db.Categories.OrderBy(x => x.DisplayOrder).ToList();
             return View(objCategoryList);
         }
+
+        public IActionResult Create()
+        {
+            return View();
+        }
     }
 }
