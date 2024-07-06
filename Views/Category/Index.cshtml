@@ -20,6 +20,8 @@
                 <th>
                     Display Order
                 </th>
+                <th>
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -27,6 +29,16 @@
             <tr>
                 <td>@category.Name</td>
                 <td>@category.DisplayOrder</td>
+                <td>
+                    <div class="btn-group" role="group">
+                        <a asp-controller="Category" asp-action="Edit" asp-route-id="@category.Id" class="btn btn-primary mx-2">
+                            <i class="bi bi-pencil-square"></i> Edit
+                        </a>
+                        <a asp-controller="Category" asp-action="Delete" asp-route-id="@category.Id" class="btn btn-danger mx-2">
+                            <i class="bi bi-trash-fill"></i> Delete
+                        </a>
+                    </div>
+                </td>
             </tr>
             }
         </tbody>

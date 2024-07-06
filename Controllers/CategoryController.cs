@@ -1,6 +1,7 @@
 ﻿using Bookstore.Data;
 using Bookstore.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bookstore.Controllers
 {
@@ -38,6 +39,73 @@ namespace Bookstore.Controllers
             }
 
             return View();
+        }
+
+        public IActionResult Edit(int? id)
+        {
+            if(id == null || id ==0)
+            {
+                return NotFound();
+            }
+            Category? categoryFromDb = _db.Categories.AsNoTracking().Where(x => x.Id == id).FirstOrDefault();
+
+            if(categoryFromDb == null)
+            {
+                return NotFound();
+            }
+
+            return View(categoryFromDb);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(Category category)
+        {
+            if(ModelState.IsValid)
+            {
+                _db.Categories.Update(category);
+                _db.SaveChanges();
+                return RedirectToAction("Index","Category");
+            }
+
+            return View();
+        }
+
+        public IActionResult Delete(int? id)
+        {
+            if(id == null || id ==0)
+            {
+                return NotFound();
+            }
+
+            Category? categoryFromDb = _db.Categories.Where(x => x.Id == id).FirstOrDefault();
+
+            if(categoryFromDb==null)
+            {
+                return NotFound();
+            }
+
+            return View(categoryFromDb);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        public IActionResult DeletePOST(int? id)
+        {
+            if(id==null || id ==0)
+            {
+                return NotFound();
+            }
+
+            Category? categoryToDelete = _db.Categories.Where(x => x.Id == id).FirstOrDefault();
+
+            if(categoryToDelete == null)
+            {
+                return NotFound();
+            }
+
+            _db.Categories.Remove(categoryToDelete);
+            _db.SaveChanges();
+
+            return RedirectToAction("Index","Category");
         }
     }
 }
