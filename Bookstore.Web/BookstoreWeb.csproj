@@ -13,12 +13,17 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Bookstore.DataAccess\Bookstore.DataAccess.csproj" />
     <ProjectReference Include="..\Bookstore.Models\Bookstore.Models.csproj" />
     <ProjectReference Include="..\Bookstore.Utility\Bookstore.Utility.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\" />
   </ItemGroup>
 
 </Project>

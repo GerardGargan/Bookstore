@@ -4,12 +4,14 @@ using Bookstore.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace Bookstore.Controllers
+namespace BookstoreWeb.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class CategoryController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-        public CategoryController(IUnitOfWork unitOfWork) {
+        public CategoryController(IUnitOfWork unitOfWork)
+        {
             _unitOfWork = unitOfWork;
         }
 
@@ -27,17 +29,17 @@ namespace Bookstore.Controllers
         [HttpPost]
         public IActionResult Create(Category category)
         {
-            if(category.Name!=null && category.Name.ToLower() == "test")
+            if (category.Name != null && category.Name.ToLower() == "test")
             {
                 ModelState.AddModelError("", "Test is not allowed as a category name");
             }
 
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 _unitOfWork.Category.Add(category);
                 _unitOfWork.Save();
                 TempData["success"] = "Category added successfully";
-            return RedirectToAction("Index","Category");
+                return RedirectToAction("Index", "Category");
             }
 
             return View();
@@ -45,13 +47,13 @@ namespace Bookstore.Controllers
 
         public IActionResult Edit(int? id)
         {
-            if(id == null || id ==0)
+            if (id == null || id == 0)
             {
                 return NotFound();
             }
             Category? categoryFromDb = _unitOfWork.Category.Get(x => x.Id == id);
 
-            if(categoryFromDb == null)
+            if (categoryFromDb == null)
             {
                 return NotFound();
             }
@@ -62,12 +64,12 @@ namespace Bookstore.Controllers
         [HttpPost]
         public IActionResult Edit(Category category)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 _unitOfWork.Category.Update(category);
                 _unitOfWork.Save();
                 TempData["success"] = "Category updated successfully";
-                return RedirectToAction("Index","Category");
+                return RedirectToAction("Index", "Category");
             }
 
             return View();
@@ -75,14 +77,14 @@ namespace Bookstore.Controllers
 
         public IActionResult Delete(int? id)
         {
-            if(id == null || id ==0)
+            if (id == null || id == 0)
             {
                 return NotFound();
             }
 
             Category? categoryFromDb = _unitOfWork.Category.Get(x => x.Id == id);
 
-            if(categoryFromDb==null)
+            if (categoryFromDb == null)
             {
                 return NotFound();
             }
@@ -93,14 +95,14 @@ namespace Bookstore.Controllers
         [HttpPost, ActionName("Delete")]
         public IActionResult DeletePOST(int? id)
         {
-            if(id==null || id ==0)
+            if (id == null || id == 0)
             {
                 return NotFound();
             }
 
             Category? categoryToDelete = _unitOfWork.Category.Get(x => x.Id == id);
 
-            if(categoryToDelete == null)
+            if (categoryToDelete == null)
             {
                 return NotFound();
             }
@@ -109,7 +111,7 @@ namespace Bookstore.Controllers
             _unitOfWork.Save();
             TempData["success"] = "Category deleted successfully";
 
-            return RedirectToAction("Index","Category");
+            return RedirectToAction("Index", "Category");
         }
     }
 }
