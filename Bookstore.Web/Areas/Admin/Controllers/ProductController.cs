@@ -41,6 +41,25 @@ namespace BookstoreWeb.Areas.Admin.Controllers
         {
             if(id == null || id <= 0)
             {
+                TempData["Error"] = "Product not found";
+                return RedirectToAction("Index", "Product");
+            }
+
+            Product product = _unitOfWork.Product.Get(x => x.Id == id);
+            if(product == null)
+            {
+                TempData["Error"] = "Product not found";
+                return RedirectToAction("Index", "Product");
+            }
+
+            return View(product);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        public IActionResult DeletePOST(int? id)
+        {
+            if(id == null || id <= 0)
+            {
                 TempData["Error"] = "Invalid product";
                 return RedirectToAction("Index", "Product");
             }
