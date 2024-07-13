@@ -1,6 +1,7 @@
 ﻿using Bookstore.DataAccess.Repository.IRepository;
 using Bookstore.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace BookstoreWeb.Areas.Admin.Controllers
 {
@@ -37,7 +38,7 @@ namespace BookstoreWeb.Areas.Admin.Controllers
             return View();
         }
 
-        public IActionResult Delete(int? id)
+        public IActionResult Edit(int? id)
         {
             if(id == null || id <= 0)
             {
@@ -46,6 +47,39 @@ namespace BookstoreWeb.Areas.Admin.Controllers
             }
 
             Product product = _unitOfWork.Product.Get(x => x.Id == id);
+            if(product == null)
+            {
+                TempData["Error"] = "Product not found";
+                return RedirectToAction("Index", "Product");
+            }
+
+            return View(product);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(Product product)
+        {
+            if(ModelState.IsValid)
+            {
+                _unitOfWork.Product.Update(product);
+                _unitOfWork.Save();
+                TempData["Success"] = "Product updated";
+                return RedirectToAction("index", "product");
+            }
+
+            return View();
+        }
+
+        public IActionResult Delete(int? id)
+        {
+            if(id == null || id <= 0)
+            {
+                TempData["Error"] = "Product not found";
+                return RedirectToAction("Index", "Product");
+            }
+
+            Product? product = _unitOfWork.Product.Get(x => x.Id == id);
+
             if(product == null)
             {
                 TempData["Error"] = "Product not found";
@@ -64,7 +98,7 @@ namespace BookstoreWeb.Areas.Admin.Controllers
                 return RedirectToAction("Index", "Product");
             }
 
-            Product product = _unitOfWork.Product.Get(x => x.Id == id);
+            Product? product = _unitOfWork.Product.Get(x => x.Id == id);
             if(product == null)
             {
                 TempData["Error"] = "Invalid product";
