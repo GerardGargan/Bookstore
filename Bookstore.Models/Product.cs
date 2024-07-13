@@ -19,18 +19,23 @@ namespace Bookstore.Models
         public string ISBN { get; set; }
         [Required]
         public string Author { get; set; }
+
         [Required]
+        [Range(1, 1000)]
         [Display(Name = "List Price")]
         public int ListPrice { get; set; }
 
+        [Range(1, 1000)]
         [Required]
         [Display(Name = "Price for 1-50")]
         public int Price { get; set; }
 
+        [Range(1, 1000)]
         [Required]
         [Display(Name = "Price for 50+")]
         public int Price50 { get; set; }
 
+        [Range(1, 1000)]
         [Required]
         [Display(Name = "Price for 100+")]
         public int Price100 { get; set; }
