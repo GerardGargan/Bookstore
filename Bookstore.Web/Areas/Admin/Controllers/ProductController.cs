@@ -22,7 +22,7 @@ namespace BookstoreWeb.Areas.Admin.Controllers
             return View(productList);
         }
 
-        public IActionResult Create()
+        public IActionResult Upsert(int? id)
         {
 
             ProductVM productVM = new ProductVM()
@@ -36,11 +36,21 @@ namespace BookstoreWeb.Areas.Admin.Controllers
                 })
             };
 
+            if(id == null || id == 0)
+            {
+                // create
             return View(productVM);
+            } else
+            {
+                //update
+                productVM.Product = _unitOfWork.Product.Get(x => x.Id == id);
+                return View(productVM);
+            }
+
         }
 
         [HttpPost]
-        public IActionResult Create(ProductVM productVM)
+        public IActionResult Upsert(ProductVM productVM, IFormFile? file)
         {
             if (ModelState.IsValid)
             {
@@ -59,38 +69,6 @@ namespace BookstoreWeb.Areas.Admin.Controllers
             }
 
             return View(productVM);
-        }
-
-        public IActionResult Edit(int? id)
-        {
-            if(id == null || id <= 0)
-            {
-                TempData["Error"] = "Product not found";
-                return RedirectToAction("Index", "Product");
-            }
-
-            Product product = _unitOfWork.Product.Get(x => x.Id == id);
-            if(product == null)
-            {
-                TempData["Error"] = "Product not found";
-                return RedirectToAction("Index", "Product");
-            }
-
-            return View(product);
-        }
-
-        [HttpPost]
-        public IActionResult Edit(Product product)
-        {
-            if(ModelState.IsValid)
-            {
-                _unitOfWork.Product.Update(product);
-                _unitOfWork.Save();
-                TempData["Success"] = "Product updated";
-                return RedirectToAction("index", "product");
-            }
-
-            return View();
         }
 
         public IActionResult Delete(int? id)
