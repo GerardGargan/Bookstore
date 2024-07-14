@@ -62,6 +62,17 @@ namespace BookstoreWeb.Areas.Admin.Controllers
                     string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
                     string productPath = Path.Combine(wwwRootPath, @"images\product");
 
+                    if (!string.IsNullOrEmpty(productVM.Product.ImageUrl))
+                    {
+                        // delete the old image, new image has been provided
+                        var oldImagePath = Path.Combine(wwwRootPath, productVM.Product.ImageUrl.TrimStart('\\'));
+
+                        if (System.IO.File.Exists(oldImagePath))
+                        {
+                            System.IO.File.Delete(oldImagePath);
+                        }
+                    }
+
                     using (var fileStream = new FileStream(Path.Combine(productPath, fileName), FileMode.Create))
                     {
                         file.CopyTo(fileStream);
@@ -71,9 +82,18 @@ namespace BookstoreWeb.Areas.Admin.Controllers
 
                 }
 
-                _unitOfWork.Product.Add(productVM.Product);
+                if(productVM.Product.Id == 0)
+                {
+                    // handle create
+                    _unitOfWork.Product.Add(productVM.Product);
+                    TempData["Success"] = "Product added successfully";
+                } else
+                {
+                    // handle update
+                    _unitOfWork.Product.Update(productVM.Product);
+                    TempData["Success"] = "Product updated successfully";
+                }
                 _unitOfWork.Save();
-                TempData["Success"] = "Product added successfully";
                 return RedirectToAction("Index", "Product");
             } else
             {
