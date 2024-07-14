@@ -45,7 +45,7 @@ namespace Bookstore.Models
         [ForeignKey("CategoryId")]
         public Category category { get; set; }
 
-
+        public string ImageUrl { get; set; }
 
     }
 }
