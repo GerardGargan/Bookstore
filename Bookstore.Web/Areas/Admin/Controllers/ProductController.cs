@@ -19,7 +19,7 @@ namespace BookstoreWeb.Areas.Admin.Controllers
         }
         public IActionResult Index()
         {
-            List<Product> productList = _unitOfWork.Product.GetAll().ToList();
+            List<Product> productList = _unitOfWork.Product.GetAll(includeProperties: "category").ToList();
             
             return View(productList);
         }
@@ -148,5 +148,18 @@ namespace BookstoreWeb.Areas.Admin.Controllers
             TempData["Success"] = "Successfully deleted product";
             return RedirectToAction("Index", "Product");
         }
+
+        #region API CALLS
+
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            List<Product> allProducts = _unitOfWork.Product.GetAll(includeProperties: "category").ToList();
+
+            return Json(new { data = allProducts });
+        }
+
+        #endregion
     }
+
 }

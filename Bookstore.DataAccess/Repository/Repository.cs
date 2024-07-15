@@ -24,16 +24,38 @@ namespace Bookstore.DataAccess.Repository
             dbSet.Add(entity);
         }
 
-        public T Get(Expression<Func<T, bool>> filter)
+        public T Get(Expression<Func<T, bool>> filter, string? includeProperties = null)
         {
             IQueryable<T> query = dbSet;
             query = query.Where(filter);
+
+            if (!string.IsNullOrEmpty(includeProperties))
+            {
+                string[] properties = includeProperties
+                    .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (string property in properties)
+                {
+                    query = query.Include(property);
+                }
+            }
+
             return query.FirstOrDefault();
         }
 
-        public IEnumerable<T> GetAll()
+        public IEnumerable<T> GetAll(string? includeProperties = null)
         {
             IQueryable<T> query = dbSet;
+
+            if (!string.IsNullOrEmpty(includeProperties))
+            {
+                string[] properties = includeProperties
+                    .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (string property in properties)
+                {
+                    query = query.Include(property);
+                }
+            }
+
             return query.ToList();
         }
 
