@@ -108,46 +108,6 @@ namespace BookstoreWeb.Areas.Admin.Controllers
             return View(productVM);
         }
 
-        public IActionResult Delete(int? id)
-        {
-            if(id == null || id <= 0)
-            {
-                TempData["Error"] = "Product not found";
-                return RedirectToAction("Index", "Product");
-            }
-
-            Product? product = _unitOfWork.Product.Get(x => x.Id == id);
-
-            if(product == null)
-            {
-                TempData["Error"] = "Product not found";
-                return RedirectToAction("Index", "Product");
-            }
-
-            return View(product);
-        }
-
-        [HttpPost, ActionName("Delete")]
-        public IActionResult DeletePOST(int? id)
-        {
-            if(id == null || id <= 0)
-            {
-                TempData["Error"] = "Invalid product";
-                return RedirectToAction("Index", "Product");
-            }
-
-            Product? product = _unitOfWork.Product.Get(x => x.Id == id);
-            if(product == null)
-            {
-                TempData["Error"] = "Invalid product";
-                return RedirectToAction("Index", "Product");
-            }
-
-            _unitOfWork.Product.Remove(product);
-            _unitOfWork.Save();
-            TempData["Success"] = "Successfully deleted product";
-            return RedirectToAction("Index", "Product");
-        }
 
         #region API CALLS
 
@@ -157,6 +117,37 @@ namespace BookstoreWeb.Areas.Admin.Controllers
             List<Product> allProducts = _unitOfWork.Product.GetAll(includeProperties: "category").ToList();
 
             return Json(new { data = allProducts });
+        }
+
+        public IActionResult Delete(int? id)
+        {
+            if(id == null || id == 0)
+            {
+                return Json(new { success = false, message = "Invalid id" });
+            }
+
+            Product productToDelete = _unitOfWork.Product.Get(x => x.Id == id);
+
+            if(productToDelete == null)
+            {
+                return Json(new { success = false, message = "Product not found" });
+            }
+
+            // delete any existing image
+
+            string imagePathToDelete = Path.Combine(_webHostEnvironment.WebRootPath, productToDelete.ImageUrl.TrimStart('\\'));
+
+            if (System.IO.File.Exists(imagePathToDelete))
+            {
+                System.IO.File.Delete(imagePathToDelete);
+            }
+
+            // delete the product record
+
+            _unitOfWork.Product.Remove(productToDelete);
+            _unitOfWork.Save();
+
+            return Json(new { success = true, message = "Product deleted" });
         }
 
         #endregion
