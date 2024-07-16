@@ -23,6 +23,12 @@ namespace BookstoreWeb.Areas.Customer.Controllers
             return View(products);
         }
 
+        public IActionResult Details(int id)
+        {
+            Product product = _unitOfWork.Product.Get(x => x.Id == id, includeProperties: "category");
+            return View(product);
+        }
+
         public IActionResult Privacy()
         {
             return View();
