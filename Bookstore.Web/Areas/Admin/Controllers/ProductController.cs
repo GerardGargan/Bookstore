@@ -119,6 +119,7 @@ namespace BookstoreWeb.Areas.Admin.Controllers
             return Json(new { data = allProducts });
         }
 
+        [HttpDelete]
         public IActionResult Delete(int? id)
         {
             if(id == null || id == 0)
