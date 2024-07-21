@@ -75,6 +75,27 @@ namespace BookstoreWeb.Areas.Admin.Controllers
             return Json(new { data = companyList });
         }
 
+        [HttpDelete]
+        public IActionResult Delete(int id)
+        {
+            if(id == null || id == 0)
+            {
+                return Json(new { success = false, message = "Invalid company id"});
+            } else
+            {
+                Company companyToDelete = _unitOfWork.Company.Get(x => x.Id == id);
+                if(companyToDelete == null)
+                {
+                    return Json(new { success = false, message = "Company does not exist" }); 
+                } else
+                {
+                    _unitOfWork.Company.Remove(companyToDelete);
+                    _unitOfWork.Save();
+                    return Json(new { success = true, message = "Company deleted" });
+                }
+            }
+        }
+
         #endregion
 
     }
