@@ -40,6 +40,31 @@ namespace BookstoreWeb.Areas.Admin.Controllers
             return View(company);
         }
 
+        [HttpPost]
+        public IActionResult Upsert(Company company)
+        {
+            if(ModelState.IsValid)
+            {
+                if(company.Id == 0)
+                {
+                    //create
+                    _unitOfWork.Company.Add(company);
+                    TempData["success"] = "Company added";
+                } else
+                {
+                    //update
+                    _unitOfWork.Company.Update(company);
+                    TempData["success"] = "Company updated";
+                }
+                _unitOfWork.Save();
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return View(company);
+            }
+        }
+
         #region API CALLS
 
         [HttpGet]
