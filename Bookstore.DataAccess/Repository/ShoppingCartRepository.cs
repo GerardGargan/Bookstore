@@ -1,6 +1,7 @@
 ﻿using Bookstore.DataAccess.Data;
 using Bookstore.DataAccess.Repository.IRepository;
 using Bookstore.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,7 @@ namespace Bookstore.DataAccess.Repository
         }
         public void Update(ShoppingCart item)
         {
-            var cartFromDb = _db.ShoppingCarts.FirstOrDefault(x => x.Id == item.Id);
+            var cartFromDb = _db.ShoppingCarts.AsNoTracking().FirstOrDefault(x => x.Id == item.Id);
 
             if (cartFromDb != null)
             {

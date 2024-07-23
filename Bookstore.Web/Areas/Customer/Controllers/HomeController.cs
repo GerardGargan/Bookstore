@@ -44,7 +44,7 @@ namespace BookstoreWeb.Areas.Customer.Controllers
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
             shoppingCart.UserId = userId;
 
-            ShoppingCart cartFromDb = _unitOfWork.ShoppingCart.Get(x => x.UserId == userId && x.ProductId == shoppingCart.ProductId, null, true);
+            ShoppingCart cartFromDb = _unitOfWork.ShoppingCart.Get(x => x.UserId == userId && x.ProductId == shoppingCart.ProductId);
 
             if(cartFromDb != null)
             {
