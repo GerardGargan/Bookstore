@@ -1,7 +1,9 @@
 using Bookstore.DataAccess.Repository.IRepository;
 using Bookstore.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Security.Claims;
 
 namespace BookstoreWeb.Areas.Customer.Controllers
 {
@@ -23,14 +25,41 @@ namespace BookstoreWeb.Areas.Customer.Controllers
             return View(products);
         }
 
-        public IActionResult Details(int id)
+        public IActionResult Details(int productId)
         {
             ShoppingCart cart = new ShoppingCart() {
-                Product = _unitOfWork.Product.Get(x => x.Id == id, includeProperties: "category"),
+                Product = _unitOfWork.Product.Get(x => x.Id == productId, includeProperties: "category"),
                 Quantity = 1,
-                ProductId = id
+                ProductId = productId
             };
             return View(cart);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public IActionResult Details(ShoppingCart shoppingCart)
+        {
+            // get the user id
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            shoppingCart.UserId = userId;
+
+            ShoppingCart cartFromDb = _unitOfWork.ShoppingCart.Get(x => x.UserId == userId && x.ProductId == shoppingCart.ProductId, null, true);
+
+            if(cartFromDb != null)
+            {
+                // cart exists with this product already, update
+                cartFromDb.Quantity += shoppingCart.Quantity;
+                _unitOfWork.ShoppingCart.Update(cartFromDb);
+            } else
+            {
+                // add new cart
+            _unitOfWork.ShoppingCart.Add(shoppingCart);
+            }
+
+            _unitOfWork.Save();
+
+            return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Privacy()
@@ -38,10 +67,5 @@ namespace BookstoreWeb.Areas.Customer.Controllers
             return View();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
     }
 }
