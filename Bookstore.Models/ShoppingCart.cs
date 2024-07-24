@@ -24,5 +24,8 @@ namespace Bookstore.Models
         [ValidateNever]
         [Range(1, 1000, ErrorMessage = "Range must be between 1 and 1000")]
         public int Quantity { get; set; }
+
+        [NotMapped]
+        public double Price { get; set; }
     }
 }
