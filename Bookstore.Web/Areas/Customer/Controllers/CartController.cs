@@ -4,6 +4,7 @@ using Bookstore.Models.ViewModels;
 using Bookstore.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGeneration.DotNet;
 using System.Security.Claims;
 
 namespace BookstoreWeb.Areas.Customer.Controllers
@@ -117,7 +118,7 @@ namespace BookstoreWeb.Areas.Customer.Controllers
             ShoppingCartVM.ShoppingCartList = _unitOfWork.ShoppingCart.GetAll(x => x.UserId == userId, includeProperties: "Product");
             ShoppingCartVM.OrderHeader.OrderDate = System.DateTime.Now;
             ShoppingCartVM.OrderHeader.ApplicationUserId = userId;
-            ShoppingCartVM.OrderHeader.ApplicationUser = _unitOfWork.User.Get(x => x.Id == userId);
+            ApplicationUser applicationUser = _unitOfWork.User.Get(x => x.Id == userId);
 
             foreach(var cart in ShoppingCartVM.ShoppingCartList)
             {
@@ -126,7 +127,7 @@ namespace BookstoreWeb.Areas.Customer.Controllers
                 
             }
 
-            if(ShoppingCartVM.OrderHeader.ApplicationUser.CompanyId.GetValueOrDefault() == 0)
+            if(applicationUser.CompanyId.GetValueOrDefault() == 0)
             {
 				// it is a regular customer account - need to capture payment
 				ShoppingCartVM.OrderHeader.PaymentStatus = SD.PaymentStatusPending;
@@ -157,8 +158,21 @@ namespace BookstoreWeb.Areas.Customer.Controllers
                 _unitOfWork.Save();
             }
 
-            
-            return null;
+            if(applicationUser.CompanyId.GetValueOrDefault() == 0)
+            {
+                // regular customer, process stripe payment
+
+            }
+
+            // redirect to order confirmation
+
+
+            return RedirectToAction(nameof(OrderConfirmation), new { id = ShoppingCartVM.OrderHeader.Id });
+        }
+
+        public IActionResult OrderConfirmation(int id)
+        {
+            return View(id);
         }
 
         private double GetPriceBasedOnQuantity(ShoppingCart shoppingCart)
