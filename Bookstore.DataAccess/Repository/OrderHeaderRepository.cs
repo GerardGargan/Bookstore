@@ -28,12 +28,23 @@ namespace Bookstore.DataAccess.Repository
             if (orderFromDb != null)
             {
                 orderFromDb.OrderStatus = orderStatus;
-                if (string.IsNullOrEmpty(paymentStatus))
+                if (!string.IsNullOrEmpty(paymentStatus))
                 {
                     orderFromDb.PaymentStatus = paymentStatus;
                 }
             }
         }
+
+		public void UpdateStripePaymentId(int id, string sessionId, string paymentIntentId)
+		{
+            var orderFromDb = _db.OrderHeaders.FirstOrDefault(x => x.Id == id);
+            if (orderFromDb != null)
+            {
+                orderFromDb.SessionId = sessionId;
+                orderFromDb.PaymentIntentId = paymentIntentId;
+            }
+
+		}
 
 		public void UpdateStripeSessionId(int id, string sessionId)
 		{
