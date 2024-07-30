@@ -11,6 +11,6 @@ namespace Bookstore.DataAccess.Repository.IRepository
     {
         public void Update(OrderHeader orderHeader);
         public void UpdateStatus(int id, string orderStatus, string? paymentStatus = null);
-        public void UpdateStripePaymentID(int id, string sessionId, string paymentIntentId);
+        public void UpdateStripeSessionId(int id, string sessionId);
     }
 }

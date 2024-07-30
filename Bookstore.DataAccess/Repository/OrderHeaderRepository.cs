@@ -35,18 +35,13 @@ namespace Bookstore.DataAccess.Repository
             }
         }
 
-		public void UpdateStripePaymentID(int id, string sessionId, string paymentIntentId)
+		public void UpdateStripeSessionId(int id, string sessionId)
 		{
             var orderFromDb = _db.OrderHeaders.FirstOrDefault(x => x.Id == id);
             if (!string.IsNullOrEmpty(sessionId))
             {
                 orderFromDb.SessionId = sessionId;
             }
-			if (!string.IsNullOrEmpty(paymentIntentId))
-			{
-				orderFromDb.PaymentIntentId = paymentIntentId;
-                orderFromDb.PaymentDate = DateTime.Now;
-			}
 		}
 	}
 }
