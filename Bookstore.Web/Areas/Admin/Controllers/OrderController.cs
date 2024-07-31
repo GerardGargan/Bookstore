@@ -1,7 +1,9 @@
 ﻿using Bookstore.DataAccess.Repository.IRepository;
 using Bookstore.Models;
+using Bookstore.Utility;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace BookstoreWeb.Areas.Admin.Controllers
 {
@@ -22,11 +24,29 @@ namespace BookstoreWeb.Areas.Admin.Controllers
 		#region API CALLS
 
 		[HttpGet]
-		public IActionResult GetAll()
+		public IActionResult GetAll(string status)
 		{
-			List<OrderHeader> allOrderHeaders = _unitOfWork.OrderHeader.GetAll(includeProperties: "ApplicationUser").ToList();
+			IEnumerable<OrderHeader> allOrderHeaders = _unitOfWork.OrderHeader.GetAll(includeProperties: "ApplicationUser").ToList();
 
-			return Json(new { data = allOrderHeaders });
+            switch (status)
+            {
+                case "pending":
+                    allOrderHeaders = allOrderHeaders.Where(x => x.PaymentStatus == SD.PaymentStatusDelayedPayment);
+                    break;
+                case "inprocess":
+                    allOrderHeaders = allOrderHeaders.Where(x => x.OrderStatus == SD.StatusInProcess);
+                    break;
+                case "completed":
+                    allOrderHeaders = allOrderHeaders.Where(x => x.OrderStatus == SD.StatusShipped);
+                    break;
+                case "approved":
+                    allOrderHeaders = allOrderHeaders.Where(x => x.OrderStatus == SD.StatusApproved);
+                    break;
+                default:
+                    break;
+            }
+
+            return Json(new { data = allOrderHeaders });
 		}
 
 		#endregion
