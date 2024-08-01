@@ -1,16 +1,10 @@
 ﻿$(document).ready(function () {
     let url = window.location.search;
-    if (url.includes("inprocess")) {
-        loadDataTable("inprocess");
-    } else if (url.includes("pending")) {
-        loadDataTable("pending");
-    } else if (url.includes("completed")) {
-        loadDataTable("completed");
-    } else if (url.includes("approved")) {
-        loadDataTable("approved");
-    } else {
-        loadDataTable("all");
-    }
+    const statusTypes = ["inprocess", "pending", "completed", "approved"];
+
+    const status = statusTypes.find(type => url.includes(type)) || "all";
+
+    loadDataTable(status);
     
 });
 
