@@ -1,5 +1,6 @@
 ﻿using Bookstore.DataAccess.Repository.IRepository;
 using Bookstore.Models;
+using Bookstore.Models.ViewModels;
 using Bookstore.Utility;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -19,6 +20,17 @@ namespace BookstoreWeb.Areas.Admin.Controllers
 		{
 			return View();
 		}
+
+        public IActionResult Details(int orderId)
+        {
+            OrderVM orderVM = new OrderVM()
+            {
+                OrderHeader = _unitOfWork.OrderHeader.Get(x => x.Id == orderId, includeProperties: "ApplicationUser"),
+                OrderDetail = _unitOfWork.OrderDetail.GetAll(x => x.OrderHeaderId == orderId, includeProperties: "Product")
+            };
+
+            return View(orderVM);
+        }
 
 
 		#region API CALLS
