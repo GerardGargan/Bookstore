@@ -22,7 +22,15 @@
                 </div>
                 <div class="row">
                     <div class="col-12 col-lg-3 offset-lg-1 text-center mb-3">
+                        @if(string.IsNullOrEmpty(Model.Product.ImageUrl))
+                        {
+                            <div style="width: 221px; height: 265px; display: flex; align-items: center; justify-content: center;" class="border bg-body-secondary card-img-top rounded">
+                                <i class="bi bi-file-earmark-image" style="font-size: 75px;"></i>
+                            </div>
+                        } else
+                        {
                         <img src="@Model.Product.ImageUrl" width="100%" class="rounded" />
+                        }
                     </div>
                     <div class="col-12 col-lg-6 offset-lg-1">
 
