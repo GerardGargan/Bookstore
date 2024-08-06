@@ -27,11 +27,12 @@
                             <div class="row my-1">
                                 <div class="col-3">Name</div>
                                 <div class="col-9">
-                                    @if(User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
+                                    @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
                                     {
                                         <input asp-for="OrderHeader.Name" type="text" class="form-control" />
                                         <span asp-validation-for="OrderHeader.Name" class="text-danger"></span>
-                                    } else
+                                    }
+                                    else
                                     {
                                         <input asp-for="OrderHeader.Name" readonly type="text" class="form-control" />
                                     }
@@ -110,7 +111,7 @@
                             <div class="row my-1">
                                 <div class="col-3">Email</div>
                                 <div class="col-9">
-                                        <input asp-for="OrderHeader.ApplicationUser.Email" readonly type="text" class="form-control" />
+                                    <input asp-for="OrderHeader.ApplicationUser.Email" readonly type="text" class="form-control" />
                                 </div>
                             </div>
                             <div class="row my-1">
@@ -124,7 +125,7 @@
                                 <div class="col-9">
                                     @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
                                     {
-                                        <input asp-for="OrderHeader.Carrier" type="text" class="form-control" />
+                                        <input asp-for="OrderHeader.Carrier" type="text" id="carrier" class="form-control" />
                                     }
                                     else
                                     {
@@ -137,7 +138,7 @@
                                 <div class="col-9">
                                     @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
                                     {
-                                        <input asp-for="OrderHeader.TrackingNumber" type="text" class="form-control" />
+                                        <input asp-for="OrderHeader.TrackingNumber" type="text" id="trackingNumber" class="form-control" />
                                     }
                                     else
                                     {
@@ -148,7 +149,7 @@
                             <div class="row my-1">
                                 <div class="col-3">Shipping Date</div>
                                 <div class="col-9">
-                                        <input value="@Model.OrderHeader.ShoppingDate.ToShortDateString()" readonly type="text" class="form-control" />
+                                    <input value="@Model.OrderHeader.ShoppingDate.ToShortDateString()" readonly type="text" class="form-control" />
                                 </div>
                             </div>
                             @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
@@ -167,13 +168,14 @@
                                 </div>
                             }
                             <div class="row my-1">
-                                @if(Model.OrderHeader.SessionId == null)
+                                @if (Model.OrderHeader.SessionId == null)
                                 {
                                     <div class="col-3">Payment Due Date</div>
                                     <div class="col-9">
                                         <input value="@Model.OrderHeader.PaymentDueDate.ToShortDateString()" readonly type="text" class="form-control" />
                                     </div>
-                                } else
+                                }
+                                else
                                 {
                                     <div class="col-3">Payment Date</div>
                                     <div class="col-9">
@@ -200,22 +202,22 @@
                             </h4>
                             <label class="btn btn-outline-primary form-control my-2">Order Status - @Model.OrderHeader.OrderStatus</label>
                             <ul class="list-group mb-3">
-                            @foreach (var orderDetail in Model.OrderDetail)
-                            {
-                                <li class="list-group-item d-flex justify-content-between p-2">
-                                    <div class="row container">
-                                        <div class="col-8">
+                                @foreach (var orderDetail in Model.OrderDetail)
+                                {
+                                    <li class="list-group-item d-flex justify-content-between p-2">
+                                        <div class="row container">
+                                            <div class="col-8">
 
-                                            <h6 class="my-0 text-primary">@orderDetail.Product.Title</h6>
-                                            <small class="text-muted">Price : @orderDetail.Price.ToString("c")</small><br />
-                                            <small class="text-muted">Quantity : @orderDetail.Quantity</small>
+                                                <h6 class="my-0 text-primary">@orderDetail.Product.Title</h6>
+                                                <small class="text-muted">Price : @orderDetail.Price.ToString("c")</small><br />
+                                                <small class="text-muted">Quantity : @orderDetail.Quantity</small>
+                                            </div>
+                                            <div class="col-4 text-end">
+                                                <p class="text-success">@((orderDetail.Quantity * orderDetail.Price).ToString("c"))</p>
+                                            </div>
                                         </div>
-                                        <div class="col-4 text-end">
-                                            <p class="text-success">@((orderDetail.Quantity * orderDetail.Price).ToString("c"))</p>
-                                        </div>
-                                    </div>
-                                </li>
-                            }
+                                    </li>
+                                }
 
                                 <li class="list-group-item bg-primary">
                                     <div class="row container">
@@ -228,22 +230,22 @@
                                     </div>
                                 </li>
                             </ul>
-                            @if(Model.OrderHeader.PaymentStatus == SD.PaymentStatusDelayedPayment && Model.OrderHeader.OrderStatus == SD.StatusShipped)
+                            @if (Model.OrderHeader.PaymentStatus == SD.PaymentStatusDelayedPayment && Model.OrderHeader.OrderStatus == SD.StatusShipped)
                             {
                                 <button type="submit" class="btn btn-success form-control my-1">Pay Now</button>
                             }
-                            @if(User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
+                            @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
                             {
-                                @if(Model.OrderHeader.PaymentStatus == SD.StatusApproved)
+                                @if (Model.OrderHeader.OrderStatus == SD.StatusApproved)
                                 {
                                     <button type="submit" asp-action="startProcessing" class="btn btn-primary form-control my-1">Start Processing</button>
                                 }
-                                @if(Model.OrderHeader.OrderStatus == SD.StatusInProcess)
+                                @if (Model.OrderHeader.OrderStatus == SD.StatusInProcess)
                                 {
-                                    <button type="submit" class="btn btn-primary form-control my-1">Ship Order</button>
+                                    <button type="submit" asp-action="shipOrder" onclick="return validateInput()" class="btn btn-primary form-control my-1">Ship Order</button>
                                 }
-                                @if(Model.OrderHeader.OrderStatus != SD.StatusRefunded
-                                && Model.OrderHeader.OrderStatus != SD.StatusCancelled
+                                @if (Model.OrderHeader.OrderStatus != SD.StatusRefunded
+                               && Model.OrderHeader.OrderStatus != SD.StatusCancelled
                                && Model.OrderHeader.OrderStatus != SD.StatusShipped)
                                 {
                                     <button type="submit" class="btn btn-danger form-control my-1">Cancel Order</button>
@@ -256,3 +258,32 @@
         </div>
     </div>
 </form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function validateInput() {
+            const trackingNumber = document.getElementById("trackingNumber").value;
+            const carrier = document.getElementById("carrier").value;
+            if(trackingNumber == "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops..',
+                    text: 'Please enter a tracking number!'
+
+                });
+                return false;
+            }
+            if (carrier == "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops..',
+                    text: 'Please enter a carrier!'
+
+                });
+                return false;
+            }
+            return true;
+        }
+    </script>
+}
