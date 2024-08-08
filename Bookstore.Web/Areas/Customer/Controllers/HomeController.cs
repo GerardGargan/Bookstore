@@ -1,6 +1,8 @@
 using Bookstore.DataAccess.Repository.IRepository;
 using Bookstore.Models;
+using Bookstore.Utility;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Security.Claims;
@@ -51,13 +53,16 @@ namespace BookstoreWeb.Areas.Customer.Controllers
                 // cart exists with this product already, update
                 cartFromDb.Quantity += shoppingCart.Quantity;
                 _unitOfWork.ShoppingCart.Update(cartFromDb);
+                _unitOfWork.Save();
             } else
             {
                 // add new cart
-            _unitOfWork.ShoppingCart.Add(shoppingCart);
+                _unitOfWork.ShoppingCart.Add(shoppingCart);
+                _unitOfWork.Save();
+                HttpContext.Session.SetInt32(SD.SessionCart, 
+                _unitOfWork.ShoppingCart.GetAll(x => x.UserId == userId).Count());
             }
 
-            _unitOfWork.Save();
 
             return RedirectToAction(nameof(Index));
         }
