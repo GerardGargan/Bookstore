@@ -23,21 +23,7 @@ namespace BookstoreWeb.Areas.Customer.Controllers
 
         public IActionResult Index()
         {
-            ClaimsIdentity userClaim = (ClaimsIdentity)User.Identity;
-            var claim = userClaim.FindFirst(ClaimTypes.NameIdentifier);
-
-            if(claim != null)
-            {
-                //user is logged in, check if a session exists
-                if(HttpContext.Session.GetInt32(SD.SessionCart) == null)
-                {
-                    // set the session for the cart after login if it doesnt exist
-                    HttpContext.Session.SetInt32(SD.SessionCart, _unitOfWork.ShoppingCart.GetAll(x => x.UserId == claim.Value).Count());
-                }
-            }
-
-
-
+            
             IEnumerable<Product> products = _unitOfWork.Product.GetAll(includeProperties: "category");
             return View(products);
         }
