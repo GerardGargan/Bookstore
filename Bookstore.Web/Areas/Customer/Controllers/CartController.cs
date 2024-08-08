@@ -55,13 +55,15 @@ namespace BookstoreWeb.Areas.Customer.Controllers
 
 		public IActionResult Minus(int cartId)
 		{
-			var cartFromDb = _unitOfWork.ShoppingCart.Get(x => x.Id == cartId);
+			var cartFromDb = _unitOfWork.ShoppingCart.Get(x => x.Id == cartId, tracked: true);
 			if (cartFromDb.Quantity <= 1)
 			{
 				//remove
+                HttpContext.Session.SetInt32(SD.SessionCart, _unitOfWork.ShoppingCart.GetAll(x => x.UserId == cartFromDb.UserId).Count() - 1);
 				_unitOfWork.ShoppingCart.Remove(cartFromDb);
-			}
-			else
+
+            }
+            else
 			{
 				//decrement and update
 				cartFromDb.Quantity -= 1;
@@ -74,10 +76,12 @@ namespace BookstoreWeb.Areas.Customer.Controllers
 
 		public IActionResult Remove(int cartId)
 		{
-			var cartFromDb = _unitOfWork.ShoppingCart.Get(x => x.Id == cartId);
+			var cartFromDb = _unitOfWork.ShoppingCart.Get(x => x.Id == cartId, tracked: true);
 
+			HttpContext.Session.SetInt32(SD.SessionCart, _unitOfWork.ShoppingCart.GetAll(x => x.UserId == cartFromDb.UserId).Count()-1);
 			_unitOfWork.ShoppingCart.Remove(cartFromDb);
 			_unitOfWork.Save();
+
 
 			return RedirectToAction(nameof(Index));
 		}
