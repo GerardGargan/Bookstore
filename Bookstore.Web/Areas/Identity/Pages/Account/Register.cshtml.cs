@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using Bookstore.DataAccess.Repository.IRepository;
 using Bookstore.Models;
 using Bookstore.Utility;
+using BookstoreWeb.Areas.Customer.Controllers;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -204,11 +205,25 @@ namespace BookstoreWeb.Areas.Identity.Pages.Account
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
-                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
+                        if (User.IsInRole(SD.Role_Admin))
+                        {
+                            TempData["success"] = "User created successfully.";
+                            return RedirectToAction("Index", "Home", new { area = "Customer" });
+                        }
+                        else
+                        {
+                            return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
+                        }
                     }
                     else
                     {
+                        if(User.IsInRole(SD.Role_Admin)) 
+                        {
+                            TempData["success"] = "User created successfully.";
+                        } else
+                        {
                         await _signInManager.SignInAsync(user, isPersistent: false);
+                        }
                         return LocalRedirect(returnUrl);
                     }
                 }
