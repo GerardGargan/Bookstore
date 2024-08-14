@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <_ContentIncludedByDefault Remove="appsettings.Production.json" />
     <_ContentIncludedByDefault Remove="wwwroot\js\product.js" />
   </ItemGroup>
 
