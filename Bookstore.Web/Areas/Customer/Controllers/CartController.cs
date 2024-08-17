@@ -170,7 +170,7 @@ namespace BookstoreWeb.Areas.Customer.Controllers
 			if (applicationUser.CompanyId.GetValueOrDefault() == 0)
 			{
 				// regular customer, process stripe payment
-				var domain = Request.Scheme + Request + "://" + Request.Host.Value + "/";
+				var domain = Request.Scheme + "://" + Request.Host.Value + "/";
 				var options = new Stripe.Checkout.SessionCreateOptions
 				{
 					SuccessUrl = domain + $"customer/cart/OrderConfirmation?id={ShoppingCartVM.OrderHeader.Id}",
