@@ -4,9 +4,9 @@
     @foreach(var product in Model)
     {
         <div class="col-lg-3 col-sm-6">
-            <div class="row p-2">
+            <div class="row p-2 h-100">
                 <div class="col-12 p-1">
-                    <div class="card border-0 p-3 shadow border-top border-5 rounded">
+                    <div class="card h-100 border-0 p-3 shadow border-top border-5 rounded">
                         @if(string.IsNullOrEmpty(product.ImageUrl))
                         {
                             <div style="width: 221px; height: 265px; display: flex; align-items: center; justify-content: center;" class="card-img-top rounded border bg-body-secondary">
