@@ -22,7 +22,7 @@ namespace BookstoreWeb.Areas.Admin.Controllers
             return View();
         }
 
-        #region
+        #region API
 
         [HttpGet]
         public IActionResult GetAll()
@@ -44,6 +44,31 @@ namespace BookstoreWeb.Areas.Admin.Controllers
             }
 
             return Json(new { data = allUsers });
+        }
+
+        [HttpPost]
+        public IActionResult LockUnlock([FromBody] string id)
+        {
+            ApplicationUser user = _db.ApplicationUsers.FirstOrDefault(x => x.Id == id);
+
+            if(user == null)
+            {
+                return Json(new { success = false, message = "Error while Locking/Unlocking" });
+            }
+
+            if (user.LockoutEnd != null && user.LockoutEnd > DateTime.Now)
+            {
+                // user is currently locked, we will unlock them
+                user.LockoutEnd = DateTime.Now;
+            } else
+            {
+                // lock the user
+                user.LockoutEnd = DateTime.Now.AddYears(1000);
+            }
+
+            _db.SaveChanges();
+
+            return Json(new { success = true, message = "User updated" });
         }
 
         #endregion
