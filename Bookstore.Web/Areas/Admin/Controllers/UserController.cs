@@ -1,7 +1,9 @@
 ﻿using Bookstore.DataAccess.Data;
 using Bookstore.DataAccess.Repository.IRepository;
 using Bookstore.Models;
+using Bookstore.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace BookstoreWeb.Areas.Admin.Controllers
 {
@@ -20,6 +22,28 @@ namespace BookstoreWeb.Areas.Admin.Controllers
         public IActionResult Index()
         {
             return View();
+        }
+
+        public IActionResult RoleManagement(string id)
+        {
+            ApplicationUser user = _unitOfWork.User.Get(x => x.Id == id);
+            
+            if(user == null)
+            {
+                return NotFound();
+            }
+
+            UserRoleVM userRoleVM = new UserRoleVM()
+            {
+                User = user,
+                RoleList = _db.Roles.Select(x => new SelectListItem()
+                {
+                    Text = x.Name,
+                    Value = x.Id.ToString()
+                }).ToList()
+            };
+
+            return View(userRoleVM);
         }
 
         #region API
