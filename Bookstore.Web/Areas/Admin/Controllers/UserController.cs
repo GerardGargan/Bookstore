@@ -24,14 +24,19 @@ namespace BookstoreWeb.Areas.Admin.Controllers
             return View();
         }
 
-        public IActionResult RoleManagement(string id)
+        public IActionResult RoleManagement(string userId)
         {
-            ApplicationUser user = _unitOfWork.User.Get(x => x.Id == id);
+            ApplicationUser user = _unitOfWork.User.Get(x => x.Id == userId);
             
-            if(user == null)
+            if(user == null || userId == null)
             {
                 return NotFound();
             }
+            var roleId = _db.UserRoles.FirstOrDefault(x => x.UserId == userId).RoleId;
+            var roleName = _db.Roles.FirstOrDefault(x => x.Id == roleId).Name;
+
+            user.Role = roleName;
+
 
             UserRoleVM userRoleVM = new UserRoleVM()
             {
@@ -40,7 +45,8 @@ namespace BookstoreWeb.Areas.Admin.Controllers
                 {
                     Text = x.Name,
                     Value = x.Id.ToString()
-                }).ToList()
+                }).ToList(),
+                RoleId = roleId
             };
 
             return View(userRoleVM);
