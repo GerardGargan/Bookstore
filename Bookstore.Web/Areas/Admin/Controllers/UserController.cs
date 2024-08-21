@@ -38,6 +38,7 @@ namespace BookstoreWeb.Areas.Admin.Controllers
             user.Role = roleName;
 
 
+
             UserRoleVM userRoleVM = new UserRoleVM()
             {
                 User = user,
@@ -46,6 +47,11 @@ namespace BookstoreWeb.Areas.Admin.Controllers
                     Text = x.Name,
                     Value = x.Id.ToString()
                 }).ToList(),
+                CompanyList = _db.Companies.Select(x => new SelectListItem()
+                {
+                    Text = x.Name,
+                    Value = x.Id.ToString()
+                }),
                 RoleId = roleId
             };
 
