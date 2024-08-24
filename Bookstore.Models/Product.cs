@@ -47,7 +47,7 @@ namespace Bookstore.Models
         [ValidateNever]
         public Category category { get; set; }
         [ValidateNever]
-        public string ImageUrl { get; set; }
+        public List<ProductImage> ProductImages { get; set; }
 
     }
 }

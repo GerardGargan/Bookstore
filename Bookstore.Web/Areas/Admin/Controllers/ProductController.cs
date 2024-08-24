@@ -64,7 +64,7 @@ namespace BookstoreWeb.Areas.Admin.Controllers
                 {
                     string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
                     string productPath = Path.Combine(wwwRootPath, @"images\product");
-
+/*
                     if (!string.IsNullOrEmpty(productVM.Product.ImageUrl))
                     {
                         // delete the old image, new image has been provided
@@ -81,7 +81,7 @@ namespace BookstoreWeb.Areas.Admin.Controllers
                         file.CopyTo(fileStream);
                     }
 
-                    productVM.Product.ImageUrl = @"\images\product\" + fileName;
+                    productVM.Product.ImageUrl = @"\images\product\" + fileName;*/
 
                 }
 
@@ -139,12 +139,12 @@ namespace BookstoreWeb.Areas.Admin.Controllers
 
             // delete any existing image
 
-            string imagePathToDelete = Path.Combine(_webHostEnvironment.WebRootPath, productToDelete.ImageUrl.TrimStart('\\'));
+            /*string imagePathToDelete = Path.Combine(_webHostEnvironment.WebRootPath, productToDelete.ImageUrl.TrimStart('\\'));
 
             if (System.IO.File.Exists(imagePathToDelete))
             {
                 System.IO.File.Delete(imagePathToDelete);
-            }
+            }*/
 
             // delete the product record
 

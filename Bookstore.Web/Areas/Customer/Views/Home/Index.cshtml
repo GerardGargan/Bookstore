@@ -7,17 +7,17 @@
             <div class="row p-2 h-100">
                 <div class="col-12 p-1">
                     <div class="card h-100 border-0 p-3 shadow border-top border-5 rounded">
-                        @if(string.IsNullOrEmpty(product.ImageUrl))
-                        {
+                        @* @if(string.IsNullOrEmpty(product.ImageUrl))
+                        { *@
                             <div style="width: 221px; height: 265px; display: flex; align-items: center; justify-content: center;" class="card-img-top rounded border bg-body-secondary">
                                 <i class="bi bi-file-earmark-image" style="font-size: 75px;"></i>
                             </div>
 
-                        } else
+                        @* } else
                         {
                             
                         <img src="@product.ImageUrl" class="card-img-top rounded" />
-                        }
+                        } *@
                         <div class="card-body pb-0">
                             <div class="pl-1">
                                 <p class="card-title h5 text-dark opacity-75 text-uppercase text-center">@product.Title</p>
