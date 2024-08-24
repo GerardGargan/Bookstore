@@ -30,6 +30,7 @@ namespace Bookstore.DataAccess.Repository
                 objFromDb.Price50 = product.Price50;
                 objFromDb.Price100 = product.Price100;
                 objFromDb.CategoryId = product.CategoryId;
+                objFromDb.ProductImages = product.ProductImages;
                 /*if (objFromDb.ImageUrl != null)
                 {
                     objFromDb.ImageUrl = product.ImageUrl;
