@@ -24,7 +24,7 @@ namespace BookstoreWeb.Areas.Customer.Controllers
         public IActionResult Index()
         {
             
-            IEnumerable<Product> products = _unitOfWork.Product.GetAll(includeProperties: "category");
+            IEnumerable<Product> products = _unitOfWork.Product.GetAll(includeProperties: "category,ProductImages");
             return View(products);
         }
 
