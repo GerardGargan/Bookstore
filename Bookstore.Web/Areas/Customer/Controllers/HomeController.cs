@@ -31,7 +31,7 @@ namespace BookstoreWeb.Areas.Customer.Controllers
         public IActionResult Details(int productId)
         {
             ShoppingCart cart = new ShoppingCart() {
-                Product = _unitOfWork.Product.Get(x => x.Id == productId, includeProperties: "category"),
+                Product = _unitOfWork.Product.Get(x => x.Id == productId, includeProperties: "category,ProductImages"),
                 Quantity = 1,
                 ProductId = productId
             };

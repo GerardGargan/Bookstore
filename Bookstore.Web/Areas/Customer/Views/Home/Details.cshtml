@@ -22,15 +22,38 @@
                 </div>
                 <div class="row">
                     <div class="col-12 col-lg-3 offset-lg-1 text-center mb-3">
-                        @* @if(string.IsNullOrEmpty(Model.Product.ImageUrl))
-                        { *@
-                            <div style="width: 221px; height: 265px; display: flex; align-items: center; justify-content: center;" class="border bg-body-secondary card-img-top rounded">
-                                <i class="bi bi-file-earmark-image" style="font-size: 75px;"></i>
-                            </div>
-                        @* } else
+                        
+
+                        @if(Model.Product.ProductImages != null && Model.Product.ProductImages.Count > 0)
                         {
-                         <img src="@Model.Product.ImageUrl" width="100%" class="rounded" /> 
-                        } *@
+                            <div id="carouselExampleIndicators" class="carousel slide">
+                                <div class="carousel-indicators">
+                                    @foreach (var imagesWithIndex in Model.Product.ProductImages
+                                    .Select((image, index) => new { ProductImage = image, Index = index }))
+                                    {
+                                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="@imagesWithIndex.Index" class="@(imagesWithIndex.Index == 0 ? "active" : "")" aria-current="true" aria-label="Slide 1"></button>
+                                    }
+                                </div>
+
+                                <div class="carousel-inner">
+                                    @foreach (var imagesWithIndex in Model.Product.ProductImages
+                                    .Select((image, index) => new { ProductImage = image, Index = index }))
+                                    {
+                                        <div class="@(imagesWithIndex.Index == 0 ? "carousel-item active" : "carousel-item")">
+                                            <img src="@imagesWithIndex.ProductImage.ImageUrl" class="d-block w-100" alt="...">
+                                        </div>
+                                    }
+                                </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            </div>
+                        }
                     </div>
                     <div class="col-12 col-lg-6 offset-lg-1">
 
