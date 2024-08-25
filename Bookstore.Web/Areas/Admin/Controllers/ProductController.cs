@@ -48,7 +48,7 @@ namespace BookstoreWeb.Areas.Admin.Controllers
             } else
             {
                 //update
-                productVM.Product = _unitOfWork.Product.Get(x => x.Id == id);
+                productVM.Product = _unitOfWork.Product.Get(x => x.Id == id, includeProperties: "ProductImages");
                 return View(productVM);
             }
 
