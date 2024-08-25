@@ -180,17 +180,6 @@ namespace BookstoreWeb.Areas.Admin.Controllers
                 return Json(new { success = false, message = "Product not found" });
             }
 
-            // delete any existing image
-
-            /*string imagePathToDelete = Path.Combine(_webHostEnvironment.WebRootPath, productToDelete.ImageUrl.TrimStart('\\'));
-
-            if (System.IO.File.Exists(imagePathToDelete))
-            {
-                System.IO.File.Delete(imagePathToDelete);
-            }*/
-
-            // delete the product record
-
             string productPath = @"images\products\product-" + id;
             string finalPath = Path.Combine(_webHostEnvironment.WebRootPath, productPath);
 
