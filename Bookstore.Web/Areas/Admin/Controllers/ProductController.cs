@@ -173,7 +173,7 @@ namespace BookstoreWeb.Areas.Admin.Controllers
                 return Json(new { success = false, message = "Invalid id" });
             }
 
-            Product productToDelete = _unitOfWork.Product.Get(x => x.Id == id);
+            Product productToDelete = _unitOfWork.Product.Get(x => x.Id == id, includeProperties: "ProductImages");
 
             if(productToDelete == null)
             {
@@ -190,6 +190,22 @@ namespace BookstoreWeb.Areas.Admin.Controllers
             }*/
 
             // delete the product record
+
+            string productPath = @"images\products\product-" + id;
+            string finalPath = Path.Combine(_webHostEnvironment.WebRootPath, productPath);
+
+            if(Directory.Exists(finalPath))
+            {
+                string[] files = Directory.GetFiles(finalPath);
+
+                foreach(var file in files)
+                {
+                    System.IO.File.Delete(file);
+                
+                }
+
+                Directory.Delete(finalPath);
+            }
 
             _unitOfWork.Product.Remove(productToDelete);
             _unitOfWork.Save();
