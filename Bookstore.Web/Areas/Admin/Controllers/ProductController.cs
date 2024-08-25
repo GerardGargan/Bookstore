@@ -54,6 +54,31 @@ namespace BookstoreWeb.Areas.Admin.Controllers
 
         }
 
+        public IActionResult DeleteImage(int ImageId)
+        {
+            ProductImage image = _unitOfWork.ProductImage.Get(x => x.Id == ImageId);
+            int productId = image.ProductId;
+            if (image != null)
+            {
+                // delete from file system
+
+                if (!string.IsNullOrEmpty(image.ImageUrl))
+                {
+                    var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, image.ImageUrl.TrimStart('\\'));
+                    if(System.IO.File.Exists(oldImagePath))
+                    {
+                        System.IO.File.Delete(oldImagePath);
+                    }
+                }
+
+                // delete from db
+                _unitOfWork.ProductImage.Remove(image);
+                _unitOfWork.Save();
+            }
+            TempData["success"] = "Image deleted successfully";
+            return RedirectToAction("Upsert", new { id = productId });
+        }
+
         [HttpPost]
         public IActionResult Upsert(ProductVM productVM, List<IFormFile> files)
         {
