@@ -9,6 +9,7 @@ Features:
 - Order Management
 - Admin Data Management (Products, Users, Roles, Companies)
 - Facebook Registration and Sign in option
+- Microsoft Registration and sign in option
 Company users have 30 days to pay, other users must pay on order.
 
 ### Home Page
